@@ -6,28 +6,63 @@ public class GameManager : MonoBehaviour {
 
     public static GameManager Instance;
 
+    
     public Camera mainCam;
-    public BoxCollider2D topWall, bottomWall, leftWall, rightWall;
 
-    public Transform player1, player2, scores;
+    [Header("Collider Positions")]
+    public BoxCollider2D topWall;
+    public BoxCollider2D bottomWall;
+    public BoxCollider2D leftWall;
+    public BoxCollider2D rightWall;
 
+    [Header("Player Positions")]
+    public Transform player1Transform;
+    public Transform player2Transform;
+
+    [Header("UI Positions")]
+    public Transform scores;
+
+    [Header("Ball Elements")]
+
+    public GameObject masterBall;       
+    public List<GameObject> balls;
+
+    [Header("Spawner Elements")]
     public PowerUpSpawner spawner;
 
-    public GameObject masterBall;
-    
-    public List<GameObject> balls;
+    [Header("Paddle Elements")]
+    public float paddleRotationSpeed;
+    public bool PaddlesRotating;
+    public Quaternion targetRotation;
 
     bool startOfGame = true;
 
     static int playerScore1 = 0;
     static int playerScore2 = 0;
 
+    
+
     void Awake() {
         Instance = this;
     }
 
     void Start() {
-        StartGame();        
+        StartGame();
+    }
+
+    void Update() {
+
+        float angleDifference = Mathf.Abs(player1Transform.rotation.z - targetRotation.z);
+
+        if (PaddlesRotating && angleDifference > 1.0f) {
+            targetRotation *= Quaternion.AngleAxis(paddleRotationSpeed, Vector3.forward);
+            player1Transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 10 * Time.deltaTime);
+        }
+        else {
+            player1Transform.rotation = Quaternion.identity;
+            targetRotation = new Quaternion(0, 0, 180, 0);
+            StopPaddleRotation();
+        }
     }
 
     void StartGame() {        //move each wall to its edge location
@@ -50,12 +85,17 @@ public class GameManager : MonoBehaviour {
     }
 
     public void Reset() {
-        Vector3 newpos1 = player1.position;
+        Vector3 newpos1 = player1Transform.position;
         newpos1.x = mainCam.ScreenToWorldPoint(new Vector3(75f, 0f, 0f)).x;
-        player1.GetComponent<Rigidbody2D>().position = newpos1;
-        Vector3 newpos2 = player2.position;
+        newpos1.y = 0;
+        //player1Transform.GetComponent<Rigidbody2D>().position = newpos1;
+        player1Transform.position = newpos1;
+
+        Vector3 newpos2 = player2Transform.position;        
         newpos2.x = mainCam.ScreenToWorldPoint(new Vector3(Screen.width - 75f, 0f, 0f)).x;
-        player2.GetComponent<Rigidbody2D>().position = newpos2;
+        newpos2.y = 0;
+        //player2Transform.GetComponent<Rigidbody2D>().position = newpos2;
+        player2Transform.position = newpos2;
 
         balls.Clear();
         spawner.RemoveAllPowerUps();
@@ -91,8 +131,6 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-
-
     public void AddBall(int numOfNewBalls) {
         for (int i = 0; i < numOfNewBalls; i++) {            
             GameObject newBall = Instantiate(masterBall, new Vector3(0, 0, 0), Quaternion.identity) as GameObject;
@@ -101,8 +139,11 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    public void PowerUpHit() {
-        
+    public void StartPaddleRotation() {
+        PaddlesRotating = true;
     }
 
+    public void StopPaddleRotation() {
+        PaddlesRotating = false;
+    }
 }
