@@ -91,8 +91,10 @@
     <Compile Include="Assets\Scripts\PowerUpSpawner.cs" />
     <Compile Include="Assets\Scripts\PowerUps\AddBallPowerUp.cs" />
     <Compile Include="Assets\Scripts\PowerUps\BallSpeedPowerUp.cs" />
+    <Compile Include="Assets\Scripts\PowerUps\FlipControlsPowerUp.cs" />
     <Compile Include="Assets\Scripts\PowerUps\PowerUp.cs" />
     <Compile Include="Assets\Scripts\PowerUps\RotatePaddlesPowerUp.cs" />
+    <Compile Include="Assets\Scripts\ScreenShake.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples\Scripts\Benchmark01.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples\Scripts\Benchmark01_UGUI.cs" />
     <Compile Include="Assets\TextMesh Pro\Examples\Scripts\Benchmark02.cs" />

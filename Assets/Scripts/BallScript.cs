@@ -28,6 +28,7 @@ public class BallScript : MonoBehaviour {
     void OnCollisionEnter2D(Collision2D coll) {
         if (coll.collider.tag == "Paddle") {
             GetComponent<Rigidbody2D>().velocity = new Vector2(GetComponent<Rigidbody2D>().velocity.x, GetComponent<Rigidbody2D>().velocity.y / 2 + coll.collider.GetComponent<Rigidbody2D>().velocity.y / 3);
+            GameManager.Instance.screenShaker.Shake(0.05f, 0.025f);
         }
     }
 
